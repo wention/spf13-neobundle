@@ -1,0 +1,408 @@
+" Modeline and Notes {
+" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
+"
+"                    __ _ _____              _
+"         ___ _ __  / _/ |___ /      __   __(_)_ __ ___
+"        / __| '_ \| |_| | |_ \ _____\ \ / /| | '_ ` _ \
+"        \__ \ |_) |  _| |___) |_____|\ V / | | | | | | |
+"        |___/ .__/|_| |_|____/        \_/  |_|_| |_| |_|
+"            |_|
+"
+"   This is the personal .vimrc.bundles file of Steve Francia.
+"   While much of it is beneficial for general use, I would
+"   recommend picking out the parts you want and understand.
+"
+"   This file imports the various plugins of spf13. If you
+"   wish to alter which groups are imported, see vimrc.before.
+"   If you wish to add or remove individual bundles, create
+"   ~/.vimrc.bundles.local and `NeoBundle` or `UnBundle` as needed
+"   from there.
+"
+"   You can find me at http://spf13.com
+" }
+
+" Environment {
+
+    " Basics {
+        set nocompatible        " Must be first line
+        set background=dark     " Assume a dark background
+    " }
+
+    " Windows Compatible {
+        " On Windows, also use '.vim' instead of 'vimfiles'; this makes synchronization
+        " across (heterogeneous) systems easier.
+        if has('win32') || has('win64')
+          set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+
+          " Be nice and check for multi_byte even if the config requires
+          " multi_byte support most of the time
+          if has("multi_byte")
+            " Windows cmd.exe still uses cp850. If Windows ever moved to
+            " Powershell as the primary terminal, this would be utf-8
+            set termencoding=cp850
+            " Let Vim use utf-8 internally, because many scripts require this
+            set encoding=utf-8
+            setglobal fileencoding=utf-8
+            " Windows has traditionally used cp1252, so it's probably wise to
+            " fallback into cp1252 instead of eg. iso-8859-15.
+            " Newer Windows files might contain utf-8 or utf-16 LE so we might
+            " want to try them first.
+            set fileencodings=ucs-bom,utf-8,utf-16le,cp1252,iso-8859-15
+          endif
+        endif
+    " }
+
+    " Setup NeoBundle Support {
+        " The next three lines ensure that the ~/.vim/bundle/ system works
+        set rtp+=~/.vim/bundle/neobundle.vim/
+        call neobundle#begin(expand('~/.vim/bundle/'))
+    " }
+
+    " Add an UnBundle command {
+    function! UnBundle(arg, ...)
+      let bundle = vundle#config#init_bundle(a:arg, a:000)
+      call filter(g:vundle#bundles, 'v:val["name_spec"] != "' . a:arg . '"')
+    endfunction
+
+    com! -nargs=+         UnBundle
+    \ call UnBundle(<args>)
+    " }
+
+" }
+
+" Bundles {
+"    Deps {
+        NeoBundleFetch 'Shougo/neobundle.vim'
+        NeoBundleLazy 'Shougo/unite.vim', {
+                    \ 'autoload' : {
+                    \     'commands' : [ "Unite", "UniteWithBufferDir", "UniteWithCurrentDir"]
+                    \   }
+                    \ }
+        NeoBundle 'Shougo/unite-outline'
+        NeoBundle 'Shougo/vimproc.vim', {
+                    \ 'build' : {
+                    \     'windows' : 'tools\\update-dll-mingw',
+                    \     'cygwin' : 'make -f make_cygwin.mak',
+                    \     'mac' : 'make -f make_mac.mak',
+                    \     'linux' : 'make',
+                    \     'unix' : 'gmake',
+                    \    },
+                    \ }
+        NeoBundleLazy 'Shougo/vimshell.vim', {
+                    \ 'depends' : 'Shougo/vimproc.vim',
+                    \ 'autoload' : {
+                    \     'commands' : [ "vimshell"]
+                    \   }
+                    \ }
+
+        NeoBundle 'MarcWeber/vim-addon-mw-utils'
+        NeoBundle 'tomtom/tlib_vim'
+        if executable('ag')
+            NeoBundle 'mileszs/ack.vim'
+            let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
+        elseif executable('ack-grep')
+            let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+            NeoBundle 'mileszs/ack.vim'
+        elseif executable('ack')
+            NeoBundle 'mileszs/ack.vim'
+        endif
+    " }
+
+    " In your .vimrc.before.local file
+    " list only the plugin groups you will use
+    if !exists('g:spf13_bundle_groups')
+        let g:spf13_bundle_groups=['general', 'writing', 'neocomplete', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'misc',]
+    endif
+
+    " To override all the included bundles, add the following to your
+    " .vimrc.bundles.local file:
+    "   let g:override_spf13_bundles = 1
+    if !exists("g:override_spf13_bundles")
+
+    " General {
+        if count(g:spf13_bundle_groups, 'general')
+            NeoBundleLazy 'scrooloose/nerdtree' ,{
+                        \ autoload :{
+                        \ commands : ["NERDTreeFind", "NERDTreeFind"],
+                        \ mappings : ["<plug>NERDTreeTabsToggle<CR>"]
+                        \    }
+                        \ }
+            NeoBundle 'altercation/vim-colors-solarized'
+            NeoBundle 'spf13/vim-colors'
+            NeoBundle 'tpope/vim-surround'
+            NeoBundle 'tpope/vim-repeat'
+            NeoBundle 'jiangmiao/auto-pairs'
+            NeoBundle 'ctrlpvim/ctrlp.vim'
+            NeoBundle 'tacahiroy/ctrlp-funky'
+            NeoBundle 'kristijanhusak/vim-multiple-cursors'
+            NeoBundle 'vim-scripts/sessionman.vim'
+            NeoBundle 'matchit.zip'
+            if (has("python") || has("python3")) && exists('g:spf13_use_powerline') && !exists('g:spf13_use_old_powerline')
+                NeoBundle 'Lokaltog/powerline', {'rtp':'/powerline/bindings/vim'}
+            elseif exists('g:spf13_use_powerline') && exists('g:spf13_use_old_powerline')
+                NeoBundle 'Lokaltog/vim-powerline'
+            else
+                NeoBundle 'bling/vim-airline'
+            endif
+            NeoBundle 'bling/vim-bufferline'
+            NeoBundle 'Lokaltog/vim-easymotion'
+            NeoBundle 'jistr/vim-nerdtree-tabs'
+            NeoBundle 'flazz/vim-colorschemes'
+            NeoBundle 'mbbill/undotree'
+            NeoBundle 'nathanaelkane/vim-indent-guides'
+            if !exists('g:spf13_no_views')
+                NeoBundle 'vim-scripts/restore_view.vim'
+            endif
+            NeoBundle 'mhinz/vim-signify'
+            NeoBundle 'tpope/vim-abolish.git'
+            NeoBundle 'osyo-manga/vim-over'
+            NeoBundle 'kana/vim-textobj-user'
+            NeoBundle 'kana/vim-textobj-indent'
+            NeoBundle 'gcmt/wildfire.vim'
+        endif
+    " }
+
+    " Writing {
+        if count(g:spf13_bundle_groups, 'writing')
+            NeoBundle 'reedes/vim-litecorrect'
+            NeoBundle 'reedes/vim-textobj-sentence'
+            NeoBundle 'reedes/vim-textobj-quote'
+            NeoBundle 'reedes/vim-wordy'
+        endif
+    " }
+
+    " General Programming {
+        if count(g:spf13_bundle_groups, 'programming')
+            " Pick one of the checksyntax, jslint, or syntastic
+            NeoBundle 'scrooloose/syntastic'
+            NeoBundle 'tpope/vim-fugitive'
+            NeoBundle 'mattn/webapi-vim'
+            NeoBundle 'mattn/gist-vim'
+            NeoBundle 'scrooloose/nerdcommenter'
+            NeoBundle 'tpope/vim-commentary'
+            NeoBundle 'godlygeek/tabular'
+            NeoBundleLazy 'majutsushi/tagbar', {
+                    \ 'autoload' : {
+                    \     'commands' : [ "TagbarToggle", "TagbarOpen", "TagbarClose", "TagbarOpenAutoClose",
+                    \                    "TagbarTogglePause", "TagbarSetFoldlevel", "TagbarShowTag", "TagbarCurrentTag",
+                    \                    "TagbarGetTypeConfig", "TagbarDebug", "TagbarDebugEnd"],
+                    \   }
+                    \ }
+        endif
+
+    " }
+
+    " Snippets & AutoComplete {
+        if count(g:spf13_bundle_groups, 'snipmate')
+            NeoBundle 'garbas/vim-snipmate'
+            NeoBundle 'honza/vim-snippets'
+            " Source support_function.vim to support vim-snippets.
+            if filereadable(expand("~/.vim/bundle/vim-snippets/snippets/support_functions.vim"))
+                source ~/.vim/bundle/vim-snippets/snippets/support_functions.vim
+            endif
+        elseif count(g:spf13_bundle_groups, 'youcompleteme')
+            NeoBundle 'Valloric/YouCompleteMe'
+            NeoBundle 'SirVer/ultisnips'
+            NeoBundle 'honza/vim-snippets'
+        elseif count(g:spf13_bundle_groups, 'neocomplcache')
+            NeoBundle 'Shougo/neocomplcache'
+            NeoBundle 'Shougo/neosnippet'
+            NeoBundle 'Shougo/neosnippet-snippets'
+            NeoBundle 'honza/vim-snippets'
+        elseif count(g:spf13_bundle_groups, 'neocomplete')
+            NeoBundle 'Shougo/neocomplete.vim.git'
+            NeoBundle 'Shougo/neosnippet'
+            NeoBundle 'Shougo/neosnippet-snippets'
+            NeoBundle 'honza/vim-snippets'
+        endif
+    " }
+
+    " PHP {
+        if count(g:spf13_bundle_groups, 'php')
+            NeoBundleLazy 'spf13/PIV' , {
+                        \   'autoload' : {
+                        \          'filetype': ['php']
+                        \       }
+                        \   }
+            NeoBundleLazy 'arnaud-lb/vim-php-namespace', {
+                        \   'autoload' : {
+                        \          'filetype': ['php']
+                        \       }
+                        \   }
+            NeoBundleLazy 'beyondwords/vim-twig', {
+                        \   'autoload' : {
+                        \          'filetype': ['php']
+                        \       }
+                        \   }
+
+        endif
+    " }
+
+    " Python {
+        if count(g:spf13_bundle_groups, 'python')
+            " Pick either python-mode or pyflakes & pydoc
+            NeoBundleLazy 'klen/python-mode', {
+                        \   'autoload' : {
+                        \          'filetype': ['python']
+                        \       }
+                        \   }
+            NeoBundleLazy 'yssource/python.vim', {
+                        \   'autoload' : {
+                        \           'filetype': ['python']
+                        \        }
+                        \    }
+            NeoBundleLazy 'python_match.vim', {
+                        \   'autoload' : {
+                        \           'filetype': ['python']
+                        \        }
+                        \    }
+            NeoBundleLazy 'pythoncomplete', {
+                        \   'autoload' : {
+                        \           'filetype': ['python']
+                        \        }
+                        \    }
+        endif
+    " }
+
+    " Javascript {
+        if count(g:spf13_bundle_groups, 'javascript')
+            NeoBundleLazy 'elzr/vim-json', {
+                        \   'autoload' : {
+                        \           'filetype': ['javascript','css','json']
+                        \        }
+                        \    }
+            NeoBundleLazy 'groenewege/vim-less', {
+                        \   'autoload' : {
+                        \           'filetype': ['javascript','css']
+                        \        }
+                        \    }
+            NeoBundleLazy 'pangloss/vim-javascript', {
+                        \   'autoload' : {
+                        \           'filetype': ['javascript']
+                        \        }
+                        \    }
+            NeoBundleLazy 'briancollins/vim-jst', {
+                        \   'autoload' : {
+                        \           'filetype': ['javascript']
+                        \        }
+                        \    }
+            NeoBundleLazy 'kchmck/vim-coffee-script', {
+                        \   'autoload' : {
+                        \           'filetype': ['javascript']
+                        \        }
+                        \    }
+        endif
+    " }
+
+    " Scala {
+        if count(g:spf13_bundle_groups, 'scala')
+            NeoBundle 'derekwyatt/vim-scala'
+            NeoBundle 'derekwyatt/vim-sbt'
+            NeoBundle 'xptemplate'
+        endif
+    " }
+
+    " Haskell {
+        if count(g:spf13_bundle_groups, 'haskell')
+            NeoBundle 'travitch/hasksyn'
+            NeoBundle 'dag/vim2hs'
+            NeoBundle 'Twinside/vim-haskellConceal'
+            NeoBundle 'Twinside/vim-haskellFold'
+            NeoBundle 'lukerandall/haskellmode-vim'
+            NeoBundle 'eagletmt/neco-ghc'
+            NeoBundle 'eagletmt/ghcmod-vim'
+            NeoBundle 'adinapoli/cumino'
+            NeoBundle 'bitc/vim-hdevtools'
+        endif
+    " }
+
+    " HTML {
+        if count(g:spf13_bundle_groups, 'html')
+            NeoBundle 'amirh/HTML-AutoCloseTag'
+            NeoBundle 'hail2u/vim-css3-syntax'
+            NeoBundle 'gorodinskiy/vim-coloresque'
+            NeoBundle 'tpope/vim-haml'
+        endif
+    " }
+
+    " Ruby {
+        if count(g:spf13_bundle_groups, 'ruby')
+            NeoBundleLazy 'tpope/vim-rails', {
+                        \   'autoload' : {
+                        \           'filetype': ['rails']
+                        \        }
+                        \    }
+            let g:rubycomplete_buffer_loading = 1
+            "let g:rubycomplete_classes_in_global = 1
+            "let g:rubycomplete_rails = 1
+        endif
+    " }
+
+    " Puppet {
+        if count(g:spf13_bundle_groups, 'puppet')
+            NeoBundleLazy 'rodjek/vim-puppet', {
+                        \   'autoload' : {
+                        \           'filetype': ['puppet']
+                        \        }
+                        \    }
+        endif
+    " }
+
+    " Go Lang {
+        if count(g:spf13_bundle_groups, 'go')
+            NeoBundleLazy 'Blackrush/vim-gocode', {
+                        \   'autoload' : {
+                        \           'filetype': ['go']
+                        \        }
+                        \    }
+            NeoBundleLazy 'fatih/vim-go', {
+                        \   'autoload' : {
+                        \           'filetype': ['go']
+                        \        }
+                        \    }
+        endif
+    " }
+
+    " Elixir {
+        if count(g:spf13_bundle_groups, 'elixir')
+            NeoBundle 'elixir-lang/vim-elixir'
+            NeoBundle 'carlosgaldino/elixir-snippets'
+            NeoBundle 'mattreduce/vim-mix'
+        endif
+    " }
+
+    " Misc {
+        if count(g:spf13_bundle_groups, 'misc')
+            NeoBundle 'rust-lang/rust.vim'
+            NeoBundleLazy 'tpope/vim-markdown', {
+                        \   'autoload' : {
+                        \           'filetype': ['markdown']
+                        \        }
+                        \    }
+            NeoBundle 'spf13/vim-preview'
+            NeoBundle 'tpope/vim-cucumber'
+            NeoBundle 'cespare/vim-toml'
+            NeoBundle 'quentindecock/vim-cucumber-align-pipes'
+            NeoBundle 'saltstack/salt-vim'
+        endif
+    " }
+
+    endif
+
+" }
+
+" Use fork bundles config if available {
+    if filereadable(expand("~/.vimrc.bundles.fork"))
+        source ~/.vimrc.bundles.fork
+    endif
+" }
+
+" Use local bundles config if available {
+    if filereadable(expand("~/.vimrc.bundles.local"))
+        source ~/.vimrc.bundles.local
+    endif
+" }
+call neobundle#end()
+ " Required:
+ filetype plugin indent on
+ NeoBundleCheck
