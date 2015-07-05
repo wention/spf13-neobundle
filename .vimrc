@@ -176,13 +176,16 @@
 " }
 
 " Vim UI {
-
-    if !exists('g:override_spf13_bundles') && filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-        let g:solarized_termcolors=256
-        let g:solarized_termtrans=1
-        let g:solarized_contrast="normal"
-        let g:solarized_visibility="normal"
-        color solarized             " Load a colorscheme
+    if has("gui_running")
+        color  badwolf_m
+    else
+        if !exists('g:override_spf13_bundles') && filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+            let g:solarized_termcolors=256
+            let g:solarized_termtrans=1
+            let g:solarized_contrast="normal"
+            let g:solarized_visibility="normal"
+            color  solarized            " Load a colorscheme
+        endif
     endif
 
     set tabpagemax=15               " Only show 15 tabs
@@ -190,8 +193,8 @@
 
     set cursorline                  " Highlight current line
 
-    highlight clear SignColumn      " SignColumn should match background
-    highlight clear LineNr          " Current line number row will have same background color in relative mode
+    "highlight clear SignColumn      " SignColumn should match background
+    "highlight clear LineNr          " Current line number row will have same background color in relative mode
     "highlight clear CursorLineNr    " Remove highlight color from current line number
 
     if has('cmdline_info')
@@ -990,11 +993,9 @@
         endif
     " }
 
-    " indent_guides {
-        if isdirectory(expand("~/.vim/bundle/vim-indent-guides/"))
-            let g:indent_guides_start_level = 2
-            let g:indent_guides_guide_size = 1
-            let g:indent_guides_enable_on_vim_startup = 1
+    " indentLine {
+        if isdirectory(expand("~/.vim/bundle/indentLine/"))
+            let g:indentLine_char = '┆'
         endif
     " }
 
