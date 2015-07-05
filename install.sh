@@ -15,10 +15,10 @@
 #   limitations under the License.
 
 ############################  SETUP PARAMETERS
-app_name='spf13-vim'
+app_name='spf13-neobundle'
 [ -z "$APP_PATH" ] && APP_PATH="$HOME/.spf13-vim-neobundle"
-[ -z "$REPO_URI" ] && REPO_URI='https://github.com/wention/spf13-vim.git'
-[ -z "$REPO_BRANCH" ] && REPO_BRANCH='neobundle'
+[ -z "$REPO_URI" ] && REPO_URI='https://github.com/wention/spf13-neobundle.git'
+[ -z "$REPO_BRANCH" ] && REPO_BRANCH='master'
 debug_mode='0'
 fork_maintainer='0'
 [ -z "$NEOBUNDLE" ] && NEOBUNDLE_URI="https://github.com/Shougo/neobundle.vim.git"
@@ -167,10 +167,10 @@ do_backup       "$HOME/.vim" \
                 "$HOME/.vimrc" \
                 "$HOME/.gvimrc"
 
-#sync_repo       "$APP_PATH" \
-#                "$REPO_URI" \
-#                "$REPO_BRANCH" \
-#                "$app_name"
+sync_repo       "$APP_PATH" \
+                "$REPO_URI" \
+                "$REPO_BRANCH" \
+                "$app_name"
 
 create_symlinks "$APP_PATH" \
                 "$HOME"
@@ -186,5 +186,4 @@ sync_repo       "$HOME/.vim/bundle/neobundle.vim" \
 
 setup_vundle    "$APP_PATH/.vimrc.bundles.default"
 
-msg             "\nThanks for installing $app_name."
-msg             "© `date +%Y` http://vim.spf13.com/"
+msg             "\ninstalling complete."
