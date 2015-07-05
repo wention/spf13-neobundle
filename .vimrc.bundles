@@ -49,7 +49,7 @@
         " fallback into cp1252 instead of eg. iso-8859-15.
         " Newer Windows files might contain utf-8 or utf-16 LE so we might
         " want to try them first.
-        set fileencodings=ucs-bom,utf-8,utf-16le,gbk,gb2312,cp936
+        set fileencodings=ucs-bom,utf-8,gbk,gb2312,cp936
       endif
     " }
 
@@ -150,7 +150,7 @@
             NeoBundle 'jistr/vim-nerdtree-tabs'
             NeoBundle 'flazz/vim-colorschemes'
             NeoBundle 'mbbill/undotree'
-            NeoBundle 'nathanaelkane/vim-indent-guides'
+            NeoBundle 'Yggdroot/indentLine'
             if !exists('g:spf13_no_views')
                 NeoBundle 'vim-scripts/restore_view.vim'
             endif
