@@ -422,8 +422,8 @@
     " http://stackoverflow.com/a/8064607/127816
     vnoremap . :normal .<CR>
 
-    " For when you forget to sudo.. Really Write the file.
-    cmap w!! w !sudo tee % >/dev/null
+    " Sudo write
+    comm! W exec 'w !sudo tee % > /dev/null' | e!
 
     " Some helpers to edit mode
     " http://vimcasts.org/e/14
