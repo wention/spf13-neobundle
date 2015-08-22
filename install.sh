@@ -16,7 +16,7 @@
 
 ############################  SETUP PARAMETERS
 app_name='spf13-neobundle'
-[ -z "$APP_PATH" ] && APP_PATH="$HOME/.spf13-vim-neobundle"
+[ -z "$APP_PATH" ] && APP_PATH="$HOME/.spf13-neobundle"
 [ -z "$REPO_URI" ] && REPO_URI='https://github.com/wention/spf13-neobundle.git'
 [ -z "$REPO_BRANCH" ] && REPO_BRANCH='master'
 debug_mode='0'
