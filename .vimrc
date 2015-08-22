@@ -1018,8 +1018,9 @@
         " See `:echo g:airline_theme_map` for some more choices
         " Default in terminal vim is 'dark'
         if isdirectory(expand("~/.vim/bundle/vim-airline/"))
+            let g:airline_powerline_fonts = 1
             if !exists('g:airline_theme')
-                let g:airline_theme = 'solarized'
+                "let g:airline_theme = 'solarized'
             endif
             if !exists('g:airline_powerline_fonts')
                 " Use the default set of separators with a few customizations
@@ -1028,6 +1029,29 @@
             endif
         endif
     " }
+    
+    " vim-devwebicons {{{
+    "let g:webdevicons_enable = 1
+    "let g:webdevicons_enable_nerdtree = 1
+    "let g:webdevicons_enable_unite = 1
+    "let g:webdevicons_enable_vimfiler = 1
+    "let g:webdevicons_enable_airline_tabline = 1
+    "let g:webdevicons_enable_airline_statusline = 1
+    "let g:webdevicons_enable_ctrlp = 1
+    "let g:webdevicons_enable_flagship_statusline = 1
+    "let g:WebDevIconsUnicodeDecorateFileNodes = 1
+    "let g:WebDevIconsUnicodeGlyphDoubleWidth = 0
+
+    "let g:WebDevIconsUnicodeDecorateFileNodesDefaultSymbol = 'ƛ'
+    "let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+    "let WebDevIconsUnicodeDecorateFolderNodesExactMatches = 1
+    "let g:WebDevIconsUnicodeDecorateFolderNodeDefaultSymbol = 'ƛ'
+
+    "let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
+    "let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['js'] = 'ƛ'
+
+
+    " }}}
 
 " }
 
@@ -1039,7 +1063,7 @@
         set lines=40                " 40 lines of text instead of 24
         if !exists("g:spf13_no_big_font")
             if LINUX() && has("gui_running")
-                set guifont=Andale\ Mono\ Regular\ 12,Menlo\ Regular\ 11,Consolas\ Regular\ 12,Courier\ New\ Regular\ 14
+                set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Plus\ Nerd\ File\ Types\ 14
             elseif OSX() && has("gui_running")
                 set guifont=Andale\ Mono\ Regular:h12,Menlo\ Regular:h11,Consolas\ Regular:h12,Courier\ New\ Regular:h14
             elseif WINDOWS() && has("gui_running")
