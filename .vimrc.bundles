@@ -123,9 +123,9 @@
     " General {
         if count(g:spf13_bundle_groups, 'general')
             NeoBundleLazy 'scrooloose/nerdtree' ,{
-                        \ autoload :{
-                        \ commands : ["NERDTreeFind", "NERDTreeFind"],
-                        \ mappings : ["<plug>NERDTreeTabsToggle<CR>"]
+                        \ 'autoload' :{
+                        \ 'commands' : ["NERDTreeFind", "NERDTreeFind"],
+                        \ 'mappings' : ["<plug>NERDTreeTabsToggle<CR>"]
                         \    }
                         \ }
             NeoBundle 'altercation/vim-colors-solarized'
@@ -403,7 +403,9 @@
         source ~/.vimrc.bundles.local
     endif
 " }
+
+" get rid of neobundle launch error
 call neobundle#end()
- " Required:
+" Required:
  filetype plugin indent on
  NeoBundleCheck
