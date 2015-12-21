@@ -184,6 +184,4 @@ sync_repo       "$HOME/.vim/bundle/neobundle.vim" \
                 "master" \
                 "neobundle"
 
-setup_vundle    "$APP_PATH/.vimrc.bundles.default"
-
 msg             "\ninstalling complete."
