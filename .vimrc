@@ -549,7 +549,6 @@
     " NerdTree {
         if isdirectory(expand("~/.vim/bundle/nerdtree"))
             map <C-e> <plug>NERDTreeTabsToggle<CR>
-            map <leader>e :NERDTreeFind<CR>
             nmap <leader>nt :NERDTreeFind<CR>
 
             let NERDTreeShowBookmarks=1
@@ -657,6 +656,14 @@
     " TagBar {
         if isdirectory(expand("~/.vim/bundle/tagbar/"))
             nnoremap <silent> <leader>tt :TagbarToggle<CR>
+        endif
+    "}
+
+    " minibufexpl {
+        if isdirectory(expand("~/.vim/bundle/minibufexpl.vim/"))
+            map <Leader>e :MBEOpen<cr>
+            map <Leader>c :MBEClose<cr>
+            map <Leader>t :MBEToggle<cr>
         endif
     "}
 

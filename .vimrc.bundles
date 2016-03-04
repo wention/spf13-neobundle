@@ -161,6 +161,7 @@
             NeoBundle 'kana/vim-textobj-indent'
             NeoBundle 'gcmt/wildfire.vim'
             NeoBundle 'ryanoasis/vim-devicons'
+            NeoBundle 'fholgado/minibufexpl.vim'
         endif
     " }
 
@@ -325,6 +326,16 @@
             NeoBundle 'hail2u/vim-css3-syntax'
             NeoBundle 'gorodinskiy/vim-coloresque'
             NeoBundle 'tpope/vim-haml'
+            NeoBundle 'mattn/emmet-vim'
+            NeoBundleLazy 'alpaca-tc/beautify.vim', {
+                  \ 'autoload' : {
+                  \   'commands' : [
+                  \     {
+                  \       'name' : 'Beautify',
+                  \       'complete' : 'customlist,beautify#complete_options'
+                  \     }
+                  \ ]
+                  \ }}
         endif
     " }
 
